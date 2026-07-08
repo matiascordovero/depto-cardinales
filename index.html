@@ -631,6 +631,41 @@
   .to-top:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; }
   .to-top svg { width: 20px; height: 20px; stroke: #fff; }
   @media (prefers-reduced-motion: reduce) { .to-top { transition: opacity .3s ease; transform: none; } }
+
+  /* ---------- refinamientos mobile ---------- */
+  @media (max-width: 700px) {
+    header { padding: 12px 0; }
+    header.scrolled { padding: 10px 0; }
+    header .container { gap: 12px; }
+    .logo { gap: 9px; }
+    .logo .mark { width: 34px; height: 34px; font-size: 16px; border-radius: 7px; flex-shrink: 0; }
+    .logo .name { font-size: 13px; letter-spacing: 0.5px; white-space: nowrap; }
+    .logo .name small { display: none; }
+    .header-cta { font-size: 10.5px; letter-spacing: 1.5px; padding: 10px 14px; }
+
+    section { padding: 64px 0; }
+    .overview { padding-top: 90px; }
+    .section-head { margin-bottom: 36px; }
+
+    .hero h1 { font-size: 34px; }
+    .hero .address { font-size: 15px; }
+    .hero-content { padding-bottom: 120px; }
+
+    .map-wrap { min-height: 320px; }
+  }
+
+  @media (max-width: 560px) {
+    .stat { padding: 18px 16px; gap: 12px; }
+    .stat svg { width: 26px; height: 26px; }
+    .stat .num { font-size: 20px; }
+    .stat .lbl { font-size: 10.5px; letter-spacing: 1.5px; }
+    .room-img { height: 260px; }
+    .visit-form { padding: 28px 22px; }
+  }
+
+  @media (max-width: 400px) {
+    .logo .name { display: none; }
+  }
 </style>
 
 <!-- ================= HEADER ================= -->
