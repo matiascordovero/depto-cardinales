@@ -218,7 +218,69 @@
   header.scrolled nav a { color: var(--ink); }
   header.scrolled nav a:hover { color: var(--bronze); }
   .header-cta { white-space: nowrap; }
-  @media (max-width: 900px) { nav { display: none; } }
+
+  /* ---------- menú hamburguesa (mobile) ---------- */
+  .menu-btn {
+    display: none;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .menu-btn svg { width: 26px; height: 26px; stroke: #fff; transition: stroke .3s ease; }
+  header.scrolled .menu-btn svg { stroke: var(--ink); }
+  header.menu-open .menu-btn svg { stroke: #fff; }
+  .menu-btn:focus-visible { outline: 2px solid var(--bronze); outline-offset: 3px; border-radius: 6px; }
+  .menu-btn .icon-close { display: none; }
+  header.menu-open .icon-open { display: none; }
+  header.menu-open .icon-close { display: block; }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: linear-gradient(180deg, rgba(26, 22, 18, 0.99) 0%, rgba(33, 29, 25, 0.99) 100%);
+    padding: 100px 30px 36px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .mobile-menu.open { opacity: 1; pointer-events: auto; }
+  .mobile-menu ul { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .mobile-menu a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--heading-font);
+    font-size: 23px;
+    font-weight: 400;
+    color: #fff;
+    padding: 15px 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: color .25s ease;
+  }
+  .mobile-menu a::after { content: '→'; color: var(--bronze); font-size: 19px; }
+  .mobile-menu a:hover { color: var(--bronze-soft); }
+  .mobile-menu .menu-note {
+    margin-top: auto;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 13.5px;
+    text-align: center;
+  }
+  body.menu-locked { overflow: hidden; }
+
+  @media (max-width: 900px) {
+    nav { display: none; }
+    .logo { display: none; }
+    .menu-btn { display: flex; }
+  }
+  @media (min-width: 901px) { .mobile-menu { display: none; } }
 
   /* ---------- hero ---------- */
   .hero {
@@ -637,10 +699,6 @@
     header { padding: 12px 0; }
     header.scrolled { padding: 10px 0; }
     header .container { gap: 12px; }
-    .logo { gap: 9px; }
-    .logo .mark { width: 34px; height: 34px; font-size: 16px; border-radius: 7px; flex-shrink: 0; }
-    .logo .name { font-size: 13px; letter-spacing: 0.5px; white-space: nowrap; }
-    .logo .name small { display: none; }
     .header-cta { font-size: 10.5px; letter-spacing: 1.5px; padding: 10px 14px; }
 
     section { padding: 64px 0; }
@@ -663,14 +721,15 @@
     .visit-form { padding: 28px 22px; }
   }
 
-  @media (max-width: 400px) {
-    .logo .name { display: none; }
-  }
 </style>
 
 <!-- ================= HEADER ================= -->
 <header id="site-header">
   <div class="container">
+    <button class="menu-btn" id="menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
     <a class="logo" href="#inicio">
       <span class="mark">C</span>
       <span class="name">Cardinales Nuevo Suquía<small>1 dormitorio · B° General Paz</small></span>
@@ -687,6 +746,21 @@
     <a class="btn header-cta" href="https://wa.me/543513251327?text=Hola%21%20Me%20interesa%20el%20departamento%20en%20Cardinales%20Nuevo%20Suqu%C3%ADa.%20%C2%BFPodemos%20coordinar%20una%20visita%3F" target="_blank" rel="noopener">Agendar visita</a>
   </div>
 </header>
+
+<!-- ================= MENÚ MOBILE ================= -->
+<nav class="mobile-menu" id="mobile-menu" aria-label="Menú de secciones">
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#descripcion">Descripción</a></li>
+    <li><a href="#ambientes">Ambientes</a></li>
+    <li><a href="#plano">Plano</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#comodidades">El complejo</a></li>
+    <li><a href="#ubicacion">Ubicación</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <p class="menu-note">Cardinales Nuevo Suquía · Ibarbálz 752, B° General Paz, Córdoba</p>
+</nav>
 
 <!-- ================= HERO ================= -->
 <section class="hero" id="inicio">
@@ -1098,6 +1172,19 @@
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  // Menú hamburguesa
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const setMenu = open => {
+    header.classList.toggle('menu-open', open);
+    mobileMenu.classList.toggle('open', open);
+    document.body.classList.toggle('menu-locked', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  };
+  menuBtn.addEventListener('click', () => setMenu(!mobileMenu.classList.contains('open')));
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
   // Tabs de ambientes
   const tabBtns = document.querySelectorAll('.tab-btn');
